@@ -1,0 +1,8 @@
+/snips/
+/node_modules/
+.vscode/
+*-bundle.js
+*-bundle.js.map
+index.css
+index.css.map
+.DS_Store

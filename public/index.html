@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="/dist/materialize.min.css">
+  <link rel="stylesheet" href="/dist/index.css">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-149414180-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-149414180-1');
+  </script>
+
+  <title>Board Game Top Nine Generator</title>
+</head>
+
+<body>
+  <div class="tng-container">
+      <a href="#" class="waves-effect waves-light btn btn-large disabled z-depth-4 generate-btn">
+          <i class="material-icons right">grid_on</i>
+          Generate Top 9
+        </a>
+    <nav class="nav-pm">
+      <div class="nav-wrapper">
+          <a href="" class="brand-logo nav-pm__title-wrapper"><img class="nav-pm__logo" src="/images/pm-logo.png" alt="">
+            <span class="nav-pm__title">Top Nine Generator</span>
+          </a>
+          <a href="#" data-target="mobile-nav-pm" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down nav-pm__links">
+            <li><a href="https://www.pubmeeple.com">Pub Meeple Home</a></li>
+            <li><a href="https://rankingengine.pubmeeple.com">Ranking Engine</a></li>
+            <li><a href="https://www.pubmeeple.com/podcast">Podcast</a></li>
+            <li><a href="https://www.pubmeeple.com/contact">Contact</a></li>
+          </ul>
+      </div>
+    </nav>
+    
+    <ul class="sidenav" id="mobile-nav-pm">
+      <li><a href="https://www.pubmeeple.com">Pub Meeple Home</a></li>
+      <li><a href="https://rankingengine.pubmeeple.com">Ranking Engine</a></li>
+      <li><a href="https://www.pubmeeple.com/podcast">Podcast</a></li>
+      <li><a href="https://www.pubmeeple.com/contact">Contact</a></li>
+    </ul>
+
+    <div class="temp-console"></div>
+    <pre id="log"></pre>
+
+    <main class="container">
+      <div class="row">
+          <div class="col s12">
+            <div class="card-panel grey lighten-3">
+              <span class="">To create your Top Nine: 1) Add 9 games to your list either from your BGG collection or BGG search. 2) Cick the Generate Top 9 button that pops up.
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row list-editor">
+            <ul class="collapsible popout col s12 m12 l6 add-options-sections">
+              <li class="bgg-section active">
+                <div class="collapsible-header"><i class="material-icons">cloud_download</i>BGG Collection</div>
+                <div class="collapsible-body">
+                  <form autocomplete="off" onsubmit="return false;" class="bgg-username-submit">
+                    <div class="row">
+                      <div class="col s12 input-field">
+                        <input id="bgg-username" type="text">
+                        <label for="bgg-username">BGG Username</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col s6">
+                        <div class="switch center-align">
+                          <span class="bgg-filter-heading">Include Expansions?</span>
+                          <p>
+                            <label>
+                              No
+                              <input id="bgg-expansions" type="checkbox">
+                              <span class="lever"></span>
+                              Yes
+                            </label>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col s6">
+                        <button type="submit" id="bgg-submit" class="waves-effect waves-light btn"><i
+                            class="material-icons right">arrow_forward</i>Go
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="ball-loading collection" style="display: none">
+                    <i class="ball"></i>
+                  </div>
+                  <div class="bgg-collection__wrapper hide">
+                    <h4 class="bgg-username-header center-align section-title"></h4>
+                    <p class="center-align">
+                      <a href="#!" class="change-bgg-username">(Change)</a>
+                    </p>
+                  </div>
+                  <div class="bgg-list hide">
+                    <div class="divider-sm"></div>
+                    <h5 class="section-title">Filters</h5>
+  
+                    <p class="center-align bgg-filter-heading">List Types</p>
+  
+                    <div>
+                      <form class="list-types-wrapper" action="#">
+                      <div class="list-types">
+                        <label class="bgg-cb">
+                          <input class="own" type="checkbox" checked />
+                          <span>Own</span>
+                        </label>
+                        <label class="bgg-cb">
+                          <input class="played" type="checkbox" checked />
+                          <span>Played</span>
+                        </label>
+                        <label class="bgg-cb">
+                          <input class="rated" type="checkbox" />
+                          <span>Rated</span>
+                        </label>
+                      </div>
+                      <div class="list-types">
+                        <label class="bgg-cb">
+                          <input class="prevowned" type="checkbox" />
+                          <span>Prev Owned</span>
+                        </label>
+                        <label class="bgg-cb">
+                          <input class="fortrade" type="checkbox" />
+                          <span>For Trade</span>
+                        </label>
+                        <label class="bgg-cb">
+                          <input class="wishlist" type="checkbox" />
+                          <span>Wishlist</span>
+                        </label>
+                      </div>
+                      <div class="list-types">
+                        <label class="bgg-cb">
+                          <input class="wanttobuy" type="checkbox" />
+                          <span>Want to Buy</span>
+                        </label>
+                        <label class="bgg-cb">
+                          <input class="wanttoplay" type="checkbox" />
+                          <span>Want to Play</span>
+                        </label>
+                        <label class="bgg-cb">
+                          <input class="want" type="checkbox" />
+                          <span>Want in Trade</span>
+                        </label>
+                      </div>
+                      </form>
+                    </div>
+                    <div class="bgg-personal-rating">
+                      <form class="bgg-personal-rating__form" action="#">
+                      <div class="center-align">
+                        <span class="bgg-filter-heading">Min Personal Rating</span>
+                      </div>
+                        <p class="range-field">
+                          <input type="range" id="personal-rating" value="0" min="0" max="10" />
+                        </p>
+                      </form>
+                    </div>
+                    <div class="input-field">
+                      <form autocomplete="off">
+                        <i class="material-icons prefix">filter_list</i>
+                        <input id="search-collection" type="text" placeholder="Search Collection" />
+                      </form>
+                    </div>
+
+                    <div class="divider-sm"></div>
+                    <div class="collection-header-wrapper">
+                      <div class="bgg-collection-info section-title"></div>
+                    </div>
+                    <div class="divider-sm"></div>
+                    <div class="bgg-collection__items">
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="bgg-search">
+                <div class="collapsible-header"><i class="material-icons">search</i>BGG Search</div>
+                <div class="collapsible-body">
+                  <p class="center-align" style="font-style: italic">Note: Each search returns at most 50 results at a time. If you do not see what you are looking for please be more specific in your search.</p>
+                  <form autocomplete="off" onsubmit="return false;" class="bgg-search-submit">
+                      <div class="row">
+                        <div class="col s12 input-field">
+                          <input id="bgg-search" type="text">
+                          <label for="bgg-search">Search Text</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col s8">
+                          <div class="">
+                            <span class="bgg-filter-heading">Search For:</span>
+                            <p class="type-radio">
+                              <label>
+                                <input class="with-gap" id="boardgames" name="bgg-search-type" type="radio" checked  />
+                                <span>Board Games</span>
+                              </label>
+                              <label>
+                                <input class="with-gap" id="expansions" name="bgg-search-type" type="radio"  />
+                                <span>Expansions</span>
+                              </label>
+                            </p>
+                          </div>
+                        </div>
+                        <div class="col s4">
+                          <button type="submit" id="bgg-search-submit" class="waves-effect waves-light btn"><i
+                              class="material-icons right">arrow_forward</i>Go
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                    <div class="ball-loading search-results" style="display: none">
+                      <i class="ball"></i>
+                    </div>
+                    <div class="bgg-search__wrapper hide">
+                      <div class="divider-sm"></div>
+                      <div class="bgg-search-results-header">
+                        <h4 class="section-title bgg-search-results-header__title">Search Results:</h4>
+                        <div class="input-field bgg-search-results-header__select">
+                          <select id="bgg-search-sort-select">
+                            <option value="bgg-rating" selected>BGG Rating</option>
+                            <option value="alphabetical">Alphabetical</option>
+                          </select>
+                          <label>Sort Results By:</label>
+                        </div>
+                      </div>
+                      <div class="divider-sm"></div>
+                      <div class="bgg-search__items"></div>
+                    </div>
+                </div>
+  
+              </li>
+            </ul>
+            <ul class="list-collapsible collapsible popout col s12 m12 l6">
+              <li class="active">
+                <div class="list-header collapsible-header"><i class="material-icons">view_list</i><span
+                    id="list-info">List: 0
+                    items</span></div>
+                <div class="collapsible-body">
+                  <div class="row list-buttons">
+                    <div class="col s12 center-align">
+                      <a id="clear-list" class="waves-effect waves-light btn"><i
+                          class="material-icons right">clear</i>Clear</a>
+                    </div>
+                  </div>
+
+                  <div class="list__items"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+    </main>
+
+    <!-- Top 9 Modal -->
+    <div id="top-nine-modal" class="modal">
+      <div class="modal-content">
+        <a href="#!" class="modal-close btn-flat modal-close-x">
+          <span aria-hidden="true">&times;</span>
+        </a>
+        <h4 class="center-align">Your Top Nine</h4>
+        <p class="center-align">If there is an issue with the image, close this dialog and click the Generate Top Nine button again to regenerate the image.</p>
+        <div class="center-align">
+          <a href="" download="topnine.png" id="download-btn" target="_blank" class="waves-effect waves-light btn disabled center-align">Save</a>
+        </div>
+        <div class="image-wrapper">
+          <img src="" alt="" class="top-nine-image" style="display: none">
+          <div class="ball-loading top-nine" style="display: none">
+            <i class="ball"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Message Modal -->
+  <div id="message-modal" class="modal">
+      <div class="modal-content">
+        <a href="#!" class="modal-close btn-flat modal-close-x">
+          <span aria-hidden="true">&times;</span>
+        </a>
+        <h4 class="center-align">For Your Info</h4>
+        <p class="message-text center-align">Some Message Text</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" id="message-ok-btn" class="modal-close waves-effect waves-green btn-flat">Ok</a>
+      </div>
+    </div>
+  
+    <!-- Alert Modal -->
+    <div id="alert-modal" class="modal">
+      <div class="modal-content">
+        <h4 class="center-align">Heads Up!</h4>
+        <p class="alert-text center-align">Some Alert Text</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" id="alert-ok-btn" class="modal-close waves-effect waves-green btn-flat">Ok</a>
+        <a href="#!" id="alert-cancel-btn" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+      </div>
+    </div>
+    
+    <div class="temp-images hide"></div>
+
+
+    <footer class="footer page-footer">
+      <div class="footer-copyright">
+       
+      </div>
+      <div class="footer-links">
+        <a class="grey-text text-lighten-4 right" href="https://www.pubmeeple.com/contact">Contact</a>
+        <a class="grey-text text-lighten-4 right" href="https://www.pubmeeple.com/support-us">Support Us</a>
+      </div>
+    </footer>
+  </div>
+    <script type="text/javascript" src="/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/dist/materialize.min.js"></script>
+    <script type="text/javascript" src="/dist/index-bundle.js"></script>
+</body>
+</html>

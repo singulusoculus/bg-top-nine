@@ -1,0 +1,33 @@
+
+/* page reset */
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+// html {
+//   // This defines what 1rem is
+//   font-size: 62.5%; // 1rem = 10px
+// }
+
+body {
+  box-sizing: border-box;
+  overflow-x: hidden;
+
+}
+
+.tng-container {
+  // makes footer stick to bottom of the page
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  // makes footer stick to bottom of the page
+  flex: 1 0 auto;
+  margin-bottom: 2rem !important;
+}

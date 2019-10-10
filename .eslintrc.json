@@ -1,0 +1,19 @@
+{
+    "extends": "standard",
+    "rules": {
+        "no-alert": 0,
+        "no-confirm": 0
+    },
+    "env": {
+        "browser": true,
+        "node": true
+      },
+      "globals": {
+        "jQuery": "writable",
+        "M": "writable",
+        "getUserID": "writable",
+        "getFilePath": "writable",
+        "getThemePath": "writable",
+        "getSiteURL": "writable"
+    }
+}
