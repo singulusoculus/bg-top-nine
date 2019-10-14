@@ -1,4 +1,5 @@
 import { custMessage } from './views'
+import { handleClickGenerate } from './top-nine'
 
 const getBGGData = (url) => {
   return new Promise((resolve, reject) => {
@@ -8,7 +9,16 @@ const getBGGData = (url) => {
       .then(str => (new window.DOMParser()).parseFromString(str, 'text/xml'))
       .then(data => {
         const dataJSON = xmlToJson(data)
-        let bggJSONData = dataJSON.items.item
+        let bggJSONData
+
+        if (dataJSON.items) {
+          bggJSONData = dataJSON.items.item
+        } else if (dataJSON.user.top) {
+          bggJSONData = dataJSON.user.top.item
+        } else {
+          bggJSONData = []
+        }
+
         if (!Array.isArray(bggJSONData)) {
           if (bggJSONData) {
             bggJSONData = [bggJSONData]
@@ -183,4 +193,45 @@ const xmlToJson = (xml) => {
   return obj
 }
 
-export { getBGGData, getBGGGameDetailData, xmlToJson }
+const checkForBGGTopTen = async (user) => {
+  // check for BGG Top 10
+  const bggTop10Url = `https://www.boardgamegeek.com/xmlapi2/user?name=${user}&top=1`
+  const bggTop10 = await getBGGData(bggTop10Url)
+  const collectionInfoEl = document.querySelector('.bgg-collection__wrapper')
+
+  if (bggTop10.length > 9) {
+    let bggIDs = []
+    bggTop10.forEach((i) => {
+      bggIDs.push(i['@attributes'].id)
+    })
+    bggIDs.pop()
+    const bggTopNine = await getBGGGameDetailData(bggIDs)
+
+    // Create button and append it to the BGG Collection section under (Change)
+    const divEl = document.createElement('div')
+    divEl.classList.add('center-align', 'generate-bgg-top-wrapper')
+    const pEl = document.createElement('p')
+    pEl.textContent = 'Use your BGG profile Top 10:'
+    divEl.appendChild(pEl)
+    const aEl = document.createElement('a')
+    aEl.href = '#'
+    aEl.classList.add('waves-effect', 'waves-lignt', 'btn', 'generate-bgg-top')
+    aEl.addEventListener('click', () => {
+      handleClickGenerate(bggTopNine)
+    })
+    const iEl = document.createElement('i')
+    iEl.classList.add('material-icons', 'right')
+    iEl.textContent = 'grid_on'
+    aEl.textContent = 'Generate Top 9'
+    aEl.appendChild(iEl)
+    divEl.appendChild(aEl)
+    collectionInfoEl.appendChild(divEl)
+  } else {
+    const generateBtn = document.querySelector('.generate-bgg-top-wrapper')
+    if (generateBtn) {
+      collectionInfoEl.removeChild(generateBtn)
+    }
+  }
+}
+
+export { getBGGData, getBGGGameDetailData, xmlToJson, checkForBGGTopTen }

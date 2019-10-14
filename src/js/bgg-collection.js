@@ -1,7 +1,7 @@
 import { custMessage, renderCollectionEl } from './views'
 import { addListItems, getListData, createList, getListDataLength } from './list'
 import { filterBGGCollection } from './filters'
-import { getBGGData } from './bgg-functions'
+import { getBGGData, getBGGGameDetailData, checkForBGGTopTen } from './bgg-functions'
 import uuidv4 from 'uuid'
 
 let bggCollectionData = []
@@ -16,6 +16,8 @@ const handleBGGCollectionRequest = async () => {
   } else {
     const expansions = document.querySelector('#bgg-expansions').checked ? 1 : 0
     bggCollectionData = await getBGGCollection(user, expansions)
+
+    checkForBGGTopTen(user)
 
     jQuery('.ball-loading.collection').fadeOut(() => {
       document.querySelector('#bgg-submit').classList.remove('disabled')

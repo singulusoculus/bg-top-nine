@@ -1,8 +1,8 @@
 import { getListData } from './list'
 
-const handleClickGenerate = () => {
-  const listData = getListData()
-  const images = checkforImages(listData)
+const handleClickGenerate = (data) => {
+  // const listData = getListData()
+  const images = checkforImages(data)
   if (images) {
     const topNineModal = M.Modal.getInstance(document.querySelector('#top-nine-modal'))
     topNineModal.open()

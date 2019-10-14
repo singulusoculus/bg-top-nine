@@ -3,14 +3,14 @@ import { handleBGGCollectionRequest, handleCollectionChangeClick } from './bgg-c
 import { handleBGGSearch } from './bgg-search'
 import { setBGGFilters, setBGGSearchFilters } from './filters'
 import { renderCollectionEl } from './views'
-import { handleClickClear } from './list'
+import { handleClickClear, getListData } from './list'
 import { handleClickGenerate } from './top-nine'
 
 jQuery(document).ready(() => {
   M.AutoInit()
 
   // Footer Info
-  const version = 'v1.0.0'
+  const version = 'v1.0.1'
   const today = new Date()
   const year = today.getFullYear()
   document.querySelector('.footer-copyright').textContent = `Designed by Brian Casey | ${version} | © ${year} Pub Meeple`
@@ -74,6 +74,7 @@ jQuery(document).ready(() => {
   })
 
   document.querySelector('.generate-btn').addEventListener('click', () => {
-    handleClickGenerate()
+    const listData = getListData()
+    handleClickGenerate(listData)
   })
 })

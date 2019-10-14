@@ -13,16 +13,29 @@ const handleBGGSearch = async (searchText, type) => {
   bggSearchData = []
   searchText = searchText.trim().replace(/ /g, '+')
 
-  let searchUrl = ''
+  // check for exact search
+  let firstChar = searchText.charAt(0)
+  let lastChar = searchText.charAt(searchText.length - 1)
+  let exactSearch = false
+
+  if (firstChar === `"` && lastChar === `"`) {
+    exactSearch = true
+    searchText = searchText.replace(/["]+/g, '')
+  }
+
+  let searchUrl = `https://boardgamegeek.com/xmlapi2/search?query=${searchText}`
+  if (exactSearch) {
+    searchUrl += `&exact=1`
+  }
   let results
   if (type === 'boardgames') {
     // when asking for type boardgame, bgg returns both boardgame and boardgameexpansion types but does not label the expansions properly.
     // I have to request expansions explicitly and then filter based on that list
-    searchUrl = `https://boardgamegeek.com/xmlapi2/search?query=${searchText}&type=boardgame`
-    let bgResults = await getBGGData(searchUrl)
+    let searchUrlBG = `${searchUrl}&type=boardgame`
+    let bgResults = await getBGGData(searchUrlBG)
 
-    searchUrl = `https://boardgamegeek.com/xmlapi2/search?query=${searchText}&type=boardgameexpansion`
-    let exResults = await getBGGData(searchUrl)
+    let searchUrlEx = `${searchUrl}&type=boardgameexpansion`
+    let exResults = await getBGGData(searchUrlEx)
 
     let expansionIds = []
     exResults.forEach((item) => {
@@ -31,8 +44,8 @@ const handleBGGSearch = async (searchText, type) => {
 
     results = bgResults.filter((i) => expansionIds.indexOf(i['@attributes'].id) < 0, expansionIds)
   } else {
-    searchUrl = `https://boardgamegeek.com/xmlapi2/search?query=${searchText}&type=boardgameexpansion`
-    results = await getBGGData(searchUrl)
+    let searchUrlEx = `${searchUrl}&type=boardgameexpansion`
+    results = await getBGGData(searchUrlEx)
   }
 
   let bggSearchItems = []
